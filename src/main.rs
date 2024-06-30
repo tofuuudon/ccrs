@@ -1,6 +1,6 @@
 use clap::Parser;
 use modules::{
-    format::{cc_message, cc_type},
+    format::{cc_description, cc_scope, cc_type},
     git::commit,
 };
 
@@ -12,11 +12,15 @@ struct Args {
 }
 
 fn main() {
+    println!("");
+
     let args = Args::parse();
 
     let cc_type = cc_type(args.r#type.as_str());
-    let cc_message = cc_message(cc_type);
-    let cc_commit = format!("{}: {}", cc_type, cc_message);
+    let mut buffer = String::from(cc_type);
 
-    commit(&cc_commit);
+    buffer = cc_scope(&buffer);
+    buffer = cc_description(&buffer);
+
+    commit(&buffer);
 }
