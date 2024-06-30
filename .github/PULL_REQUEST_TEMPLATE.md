@@ -5,7 +5,7 @@
 
 ## Other information
 
-_(Optional) Please remove if there's not additional context._
+_(Optional) Please remove if there's no additional context._
 
 -
 -
