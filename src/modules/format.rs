@@ -15,7 +15,7 @@ pub fn cc_type(type_arg: &str) -> &str {
     }
 }
 
-pub fn cc_message(cc_type: &str) -> String {
+pub fn cc_description(cc_type: &str) -> String {
     print!("{}: ", cc_type);
     io::stdout().flush().unwrap();
 
