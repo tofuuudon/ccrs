@@ -16,5 +16,5 @@ fn main() {
     let cc_type = cc_type(args.r#type.as_str());
     let cc_message = cc_message(cc_type);
 
-    println!("[Done] {}: {}", cc_type, cc_message);
+    println!("{}: {}", cc_type, cc_message);
 }
