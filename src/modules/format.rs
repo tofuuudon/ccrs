@@ -2,8 +2,8 @@ use std::io::{self, Write};
 
 pub fn cc_type(type_arg: &str) -> &str {
     match type_arg {
-        "fe" => "feat",
-        "fi" => "fix",
+        "ft" => "feat",
+        "fx" => "fix",
         "do" => "docs",
         "st" => "style",
         "p" => "perf",
@@ -15,12 +15,27 @@ pub fn cc_type(type_arg: &str) -> &str {
     }
 }
 
-pub fn cc_description(cc_type: &str) -> String {
-    print!("{}: ", cc_type);
+pub fn cc_scope(prev: &str) -> String {
+    print!("{}(", prev);
     io::stdout().flush().unwrap();
 
     let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).expect("failed");
+    io::stdin().read_line(&mut buffer).unwrap();
 
-    buffer
+    if buffer.trim().is_empty() {
+        return prev.to_string();
+    }
+
+    format!("{}({})", prev, buffer.trim().to_string())
+}
+
+pub fn cc_description(prev: &str) -> String {
+    print!("\x1B[1A\x1B[2K");
+    print!("{}: ", prev);
+    io::stdout().flush().unwrap();
+
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).unwrap();
+
+    format!("{}: {}", prev, buffer.trim().to_string())
 }
