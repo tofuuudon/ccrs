@@ -1,11 +1,10 @@
 use clap::Parser;
+use modules::{
+    format::{cc_message, cc_type},
+    git::commit,
+};
 
-use format::format::cc_message;
-use format::format::cc_type;
-use git::git::commit;
-
-mod format;
-mod git;
+mod modules;
 
 #[derive(Parser)]
 struct Args {
