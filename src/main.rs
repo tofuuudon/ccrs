@@ -1,5 +1,9 @@
 use clap::Parser;
 
+use format::format::cc_type;
+
+mod format;
+
 #[derive(Parser)]
 struct Args {
     r#type: String,
@@ -8,18 +12,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let cc_type = match args.r#type.as_str() {
-        "fe" => "feat",
-        "fi" => "fix",
-        "do" => "docs",
-        "st" => "style",
-        "p" => "perf",
-        "t" => "test",
-        "b" => "build",
-        "ci" => "ci",
-        "ch" => "chore",
-        _ => "",
-    };
+    let cc_type = cc_type(args.r#type.as_str());
 
     println!("{}", cc_type);
 }
