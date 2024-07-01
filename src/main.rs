@@ -25,7 +25,7 @@ fn main() {
     match cc_description(&buffer) {
         Ok(new_buffer) => buffer = new_buffer,
         Err(PromptError::EmptyInput) => {
-            eprintln!("must provide a description");
+            print!("\x1B[1A\x1B[2K[ERROR] Must provide a description");
             std::process::exit(1);
         }
     };
