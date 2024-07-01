@@ -24,7 +24,5 @@ fn main() {
     buffer = cc_description(&buffer);
     buffer = cc_body(&buffer);
 
-    println!("{}", buffer);
-
     commit(&buffer);
 }

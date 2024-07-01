@@ -31,7 +31,7 @@ pub fn cc_scope(prev: &str) -> String {
 
 pub fn cc_breaking_change(prev: &str) -> String {
     print!("\x1B[1A\x1B[2K");
-    print!("{} <- has breaking change? y/N", prev);
+    print!("{} <- has breaking change? y/N ", prev);
     io::stdout().flush().unwrap();
 
     let mut buffer = String::new();
