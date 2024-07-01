@@ -1,6 +1,6 @@
 use clap::Parser;
 use modules::{
-    format::{cc_body, cc_breaking_change, cc_description, cc_scope, cc_type},
+    format::{cc_body, cc_breaking_change, cc_description, cc_scope, cc_type, PromptError},
     git::commit,
 };
 
@@ -21,7 +21,15 @@ fn main() {
 
     buffer = cc_scope(&buffer);
     buffer = cc_breaking_change(&buffer);
-    buffer = cc_description(&buffer);
+
+    match cc_description(&buffer) {
+        Ok(new_buffer) => buffer = new_buffer,
+        Err(PromptError::EmptyInput) => {
+            eprintln!("must provide a description");
+            std::process::exit(1);
+        }
+    };
+
     buffer = cc_body(&buffer);
 
     commit(&buffer);

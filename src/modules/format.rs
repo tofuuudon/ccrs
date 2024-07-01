@@ -1,5 +1,41 @@
 use std::io::{self, Write};
 
+enum PromptType {
+    Scope,
+    BreakingChange,
+    Description,
+    Body,
+}
+
+pub enum PromptError {
+    EmptyInput,
+}
+
+fn prompt(r#type: PromptType, prev: &str) -> String {
+    match r#type {
+        PromptType::Scope => {
+            print!("{}(", prev)
+        }
+        PromptType::BreakingChange => {
+            print!("\x1B[1A\x1B[2K");
+            print!("{} <- has breaking change? y/N ", prev);
+        }
+        PromptType::Description => {
+            print!("\x1B[1A\x1B[2K");
+            print!("{}: ", prev);
+        }
+        PromptType::Body => {
+            println!("");
+        }
+    }
+    io::stdout().flush().unwrap();
+
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).unwrap();
+
+    buffer.trim().to_string()
+}
+
 pub fn cc_type(type_arg: &str) -> &str {
     match type_arg {
         "ft" => "feat",
@@ -16,11 +52,7 @@ pub fn cc_type(type_arg: &str) -> &str {
 }
 
 pub fn cc_scope(prev: &str) -> String {
-    print!("{}(", prev);
-    io::stdout().flush().unwrap();
-
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).unwrap();
+    let buffer = prompt(PromptType::Scope, prev);
 
     if buffer.trim().is_empty() {
         return prev.to_string();
@@ -30,12 +62,7 @@ pub fn cc_scope(prev: &str) -> String {
 }
 
 pub fn cc_breaking_change(prev: &str) -> String {
-    print!("\x1B[1A\x1B[2K");
-    print!("{} <- has breaking change? y/N ", prev);
-    io::stdout().flush().unwrap();
-
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).unwrap();
+    let buffer = prompt(PromptType::BreakingChange, prev);
 
     match buffer.trim().to_lowercase().as_str() {
         "y" => format!("{}!", prev),
@@ -43,24 +70,18 @@ pub fn cc_breaking_change(prev: &str) -> String {
     }
 }
 
-pub fn cc_description(prev: &str) -> String {
-    print!("\x1B[1A\x1B[2K");
-    print!("{}: ", prev);
-    io::stdout().flush().unwrap();
+pub fn cc_description(prev: &str) -> Result<String, PromptError> {
+    let buffer = prompt(PromptType::Description, prev);
 
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).unwrap();
+    if buffer.is_empty() {
+        return Err(PromptError::EmptyInput);
+    }
 
-    format!("{}: {}", prev, buffer.trim().to_string())
+    Ok(format!("{}: {}", prev, buffer.trim().to_string()))
 }
 
 pub fn cc_body(prev: &str) -> String {
-    println!("");
-
-    io::stdout().flush().unwrap();
-
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).unwrap();
+    let buffer = prompt(PromptType::Body, prev);
 
     if buffer.trim().is_empty() {
         return prev.to_string();
