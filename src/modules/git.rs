@@ -8,8 +8,8 @@ pub fn commit(message: &str) {
         .expect("failed");
 
     if output.status.success() {
-        println!("{}", String::from_utf8_lossy(&output.stdout));
+        println!("\n{}", String::from_utf8_lossy(&output.stdout));
     } else {
-        eprintln!("{}", String::from_utf8_lossy(&output.stdout));
+        eprintln!("\n{}", String::from_utf8_lossy(&output.stdout));
     }
 }

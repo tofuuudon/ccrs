@@ -1,6 +1,6 @@
 use clap::Parser;
 use modules::{
-    format::{cc_description, cc_scope, cc_type},
+    format::{cc_breaking_change, cc_description, cc_scope, cc_type},
     git::commit,
 };
 
@@ -20,6 +20,7 @@ fn main() {
     let mut buffer = String::from(cc_type);
 
     buffer = cc_scope(&buffer);
+    buffer = cc_breaking_change(&buffer);
     buffer = cc_description(&buffer);
 
     commit(&buffer);
