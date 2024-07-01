@@ -1,4 +1,5 @@
-use clap::Parser;
+use std::env;
+
 use modules::{
     format::{cc_body, cc_breaking_change, cc_description, cc_scope, cc_type, PromptError},
     git::commit,
@@ -6,17 +7,12 @@ use modules::{
 
 mod modules;
 
-#[derive(Parser)]
-struct Args {
-    r#type: String,
-}
-
 fn main() {
     println!("");
 
-    let args = Args::parse();
+    let command = env::args().nth(1).unwrap();
 
-    let cc_type = cc_type(args.r#type.as_str());
+    let cc_type = cc_type(&command);
     let mut buffer = String::from(cc_type);
 
     buffer = cc_scope(&buffer);
