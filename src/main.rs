@@ -1,6 +1,6 @@
 use clap::Parser;
 use modules::{
-    format::{cc_breaking_change, cc_description, cc_scope, cc_type},
+    format::{cc_body, cc_breaking_change, cc_description, cc_scope, cc_type},
     git::commit,
 };
 
@@ -22,6 +22,7 @@ fn main() {
     buffer = cc_scope(&buffer);
     buffer = cc_breaking_change(&buffer);
     buffer = cc_description(&buffer);
+    buffer = cc_body(&buffer);
 
     commit(&buffer);
 }

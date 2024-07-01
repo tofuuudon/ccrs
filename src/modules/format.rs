@@ -31,13 +31,13 @@ pub fn cc_scope(prev: &str) -> String {
 
 pub fn cc_breaking_change(prev: &str) -> String {
     print!("\x1B[1A\x1B[2K");
-    print!("{} <- has breaking change? y/N", prev);
+    print!("{} <- has breaking change? [y/N] ", prev);
     io::stdout().flush().unwrap();
 
     let mut buffer = String::new();
     io::stdin().read_line(&mut buffer).unwrap();
 
-    match buffer.trim().to_lowercase().as_str() {
+    match buffer.to_lowercase().as_str().trim() {
         "y" => format!("{}!", prev),
         _ => prev.to_string(),
     }
@@ -52,4 +52,19 @@ pub fn cc_description(prev: &str) -> String {
     io::stdin().read_line(&mut buffer).unwrap();
 
     format!("{}: {}", prev, buffer.trim().to_string())
+}
+
+pub fn cc_body(prev: &str) -> String {
+    println!("");
+
+    io::stdout().flush().unwrap();
+
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).unwrap();
+
+    if buffer.trim().is_empty() {
+        prev.to_string();
+    }
+
+    format!("{}\n\n{}", prev, buffer.trim().to_string())
 }
