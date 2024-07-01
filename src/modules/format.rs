@@ -53,3 +53,18 @@ pub fn cc_description(prev: &str) -> String {
 
     format!("{}: {}", prev, buffer.trim().to_string())
 }
+
+pub fn cc_body(prev: &str) -> String {
+    println!("");
+
+    io::stdout().flush().unwrap();
+
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).unwrap();
+
+    if buffer.trim().is_empty() {
+        return prev.to_string();
+    }
+
+    format!("{}\n\n{}", prev, buffer.trim().to_string())
+}
