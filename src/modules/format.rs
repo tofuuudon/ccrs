@@ -84,6 +84,7 @@ pub fn cc_body(prev: &str) -> String {
     let buffer = prompt(PromptType::Body, prev);
 
     if buffer.trim().is_empty() {
+        print!("\x1B[2A\x1B[2K");
         return prev.to_string();
     }
 
@@ -97,6 +98,7 @@ pub fn cc_confirm() -> bool {
 
     let mut buffer = String::new();
     io::stdin().read_line(&mut buffer).unwrap();
+    println!("");
 
     if buffer.trim().to_lowercase().as_str() == "y" {
         return true;
