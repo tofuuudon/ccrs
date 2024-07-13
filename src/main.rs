@@ -2,7 +2,8 @@ use std::env;
 
 use modules::{
     format::{
-        cc_body, cc_breaking_change, cc_confirm, cc_description, cc_scope, cc_type, PromptError,
+        cc_body, cc_breaking_change, cc_confirm, cc_description, cc_footer, cc_scope, cc_type,
+        PromptError,
     },
     git::commit,
 };
@@ -29,6 +30,7 @@ fn main() {
     };
 
     buffer = cc_body(&buffer);
+    buffer = cc_footer(&buffer);
 
     if cc_confirm() {
         commit(&buffer);

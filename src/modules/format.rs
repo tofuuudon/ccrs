@@ -5,6 +5,7 @@ enum PromptType {
     BreakingChange,
     Description,
     Body,
+    Footer,
 }
 
 pub enum PromptError {
@@ -33,6 +34,10 @@ fn prompt(r#type: PromptType, prev: &str) -> String {
         PromptType::Body => {
             println!("");
             print!("[body] ");
+        }
+        PromptType::Footer => {
+            println!("");
+            print!("[footer] ");
         }
     }
     io::stdout().flush().unwrap();
@@ -101,6 +106,21 @@ pub fn cc_body(prev: &str) -> String {
     print!("{}\n", body);
 
     format!("{}\n\n{}", prev, body)
+}
+
+pub fn cc_footer(prev: &str) -> String {
+    let buffer = prompt(PromptType::Footer, prev);
+
+    if buffer.trim().is_empty() {
+        clear_lines(2);
+        return prev.to_string();
+    }
+
+    let footer = buffer.trim().to_string();
+    clear_lines(1);
+    print!("{}\n", footer);
+
+    format!("{}\n\n{}", prev, footer)
 }
 
 pub fn cc_confirm() -> bool {
