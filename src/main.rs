@@ -1,14 +1,16 @@
 use std::env;
 
 use modules::{
-    format::{cc_body, cc_breaking_change, cc_description, cc_scope, cc_type, PromptError},
+    format::{
+        cc_body, cc_breaking_change, cc_confirm, cc_description, cc_scope, cc_type, PromptError,
+    },
     git::commit,
 };
 
 mod modules;
 
 fn main() {
-    println!("");
+    println!("\n------- ccrs -------\n");
 
     let command = env::args().nth(1).unwrap();
 
@@ -28,5 +30,7 @@ fn main() {
 
     buffer = cc_body(&buffer);
 
-    commit(&buffer);
+    if cc_confirm() {
+        commit(&buffer);
+    }
 }

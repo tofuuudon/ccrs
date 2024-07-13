@@ -89,3 +89,18 @@ pub fn cc_body(prev: &str) -> String {
 
     format!("{}\n\n{}", prev, buffer.trim().to_string())
 }
+
+pub fn cc_confirm() -> bool {
+    println!("\n--------------------");
+    print!("Ready to commit? y/N ");
+    io::stdout().flush().unwrap();
+
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).unwrap();
+
+    if buffer.trim().to_lowercase().as_str() == "y" {
+        return true;
+    };
+
+    false
+}
