@@ -11,8 +11,10 @@ pub enum PromptError {
     EmptyInput,
 }
 
-fn clear_lines(lines: u8) {
-    print!("\x1B[{}A\x1B[2K", lines);
+fn clear_lines(n: u8) {
+    for _i in 0..n {
+        print!("\x1B[1A\x1B[2K");
+    }
 }
 
 fn prompt(r#type: PromptType, prev: &str) -> String {
@@ -30,6 +32,7 @@ fn prompt(r#type: PromptType, prev: &str) -> String {
         }
         PromptType::Body => {
             println!("");
+            print!("[body] ");
         }
     }
     io::stdout().flush().unwrap();
@@ -93,7 +96,11 @@ pub fn cc_body(prev: &str) -> String {
         return prev.to_string();
     }
 
-    format!("{}\n\n{}", prev, buffer.trim().to_string())
+    let body = buffer.trim().to_string();
+    clear_lines(1);
+    print!("{}\n", body);
+
+    format!("{}\n\n{}", prev, body)
 }
 
 pub fn cc_confirm() -> bool {
