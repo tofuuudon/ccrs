@@ -11,17 +11,21 @@ pub enum PromptError {
     EmptyInput,
 }
 
+fn clear_lines(lines: u8) {
+    print!("\x1B[{}A\x1B[2K", lines);
+}
+
 fn prompt(r#type: PromptType, prev: &str) -> String {
     match r#type {
         PromptType::Scope => {
             print!("{}(", prev)
         }
         PromptType::BreakingChange => {
-            print!("\x1B[1A\x1B[2K");
+            clear_lines(1);
             print!("{} <- has breaking change? y/N ", prev);
         }
         PromptType::Description => {
-            print!("\x1B[1A\x1B[2K");
+            clear_lines(1);
             print!("{}: ", prev);
         }
         PromptType::Body => {
@@ -47,6 +51,7 @@ pub fn cc_type(type_arg: &str) -> &str {
         "b" => "build",
         "ci" => "ci",
         "ch" => "chore",
+        "rf" => "refactor",
         _ => "",
     }
 }
@@ -84,7 +89,7 @@ pub fn cc_body(prev: &str) -> String {
     let buffer = prompt(PromptType::Body, prev);
 
     if buffer.trim().is_empty() {
-        print!("\x1B[2A\x1B[2K");
+        clear_lines(2);
         return prev.to_string();
     }
 
