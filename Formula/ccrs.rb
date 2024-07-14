@@ -6,6 +6,7 @@ class Ccrs < Formula
 
   def install
     bin.install "ccrs"
+    bin.install_symlink "ccrs" => "cc"
   end
 end
 
