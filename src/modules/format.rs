@@ -1,5 +1,53 @@
 use std::io::{self, Write};
 
+enum PromptType {
+    Scope,
+    BreakingChange,
+    Description,
+    Body,
+    Footer,
+}
+
+pub enum PromptError {
+    EmptyInput,
+}
+
+fn clear_lines(n: u8) {
+    for _i in 0..n {
+        print!("\x1B[1A\x1B[2K");
+    }
+}
+
+fn prompt(r#type: PromptType, prev: &str) -> String {
+    match r#type {
+        PromptType::Scope => {
+            print!("{}(", prev)
+        }
+        PromptType::BreakingChange => {
+            clear_lines(1);
+            print!("{} <- has breaking change? y/N ", prev);
+        }
+        PromptType::Description => {
+            clear_lines(1);
+            print!("{}: ", prev);
+        }
+        PromptType::Body => {
+            println!("");
+            print!("[body] ");
+        }
+        PromptType::Footer => {
+            println!("");
+            print!("[footer] ");
+        }
+    }
+    io::stdout().flush().unwrap();
+
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).unwrap();
+
+    buffer.trim().to_string()
+}
+
 pub fn cc_type(type_arg: &str) -> &str {
     match type_arg {
         "ft" => "feat",
@@ -11,16 +59,13 @@ pub fn cc_type(type_arg: &str) -> &str {
         "b" => "build",
         "ci" => "ci",
         "ch" => "chore",
+        "rf" => "refactor",
         _ => "",
     }
 }
 
 pub fn cc_scope(prev: &str) -> String {
-    print!("{}(", prev);
-    io::stdout().flush().unwrap();
-
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).unwrap();
+    let buffer = prompt(PromptType::Scope, prev);
 
     if buffer.trim().is_empty() {
         return prev.to_string();
@@ -30,12 +75,7 @@ pub fn cc_scope(prev: &str) -> String {
 }
 
 pub fn cc_breaking_change(prev: &str) -> String {
-    print!("\x1B[1A\x1B[2K");
-    print!("{} <- has breaking change? y/N ", prev);
-    io::stdout().flush().unwrap();
-
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).unwrap();
+    let buffer = prompt(PromptType::BreakingChange, prev);
 
     match buffer.trim().to_lowercase().as_str() {
         "y" => format!("{}!", prev),
@@ -43,28 +83,58 @@ pub fn cc_breaking_change(prev: &str) -> String {
     }
 }
 
-pub fn cc_description(prev: &str) -> String {
-    print!("\x1B[1A\x1B[2K");
-    print!("{}: ", prev);
-    io::stdout().flush().unwrap();
+pub fn cc_description(prev: &str) -> Result<String, PromptError> {
+    let buffer = prompt(PromptType::Description, prev);
 
-    let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).unwrap();
+    if buffer.is_empty() {
+        return Err(PromptError::EmptyInput);
+    }
 
-    format!("{}: {}", prev, buffer.trim().to_string())
+    Ok(format!("{}: {}", prev, buffer.trim().to_string()))
 }
 
 pub fn cc_body(prev: &str) -> String {
-    println!("");
+    let buffer = prompt(PromptType::Body, prev);
 
+    if buffer.trim().is_empty() {
+        clear_lines(2);
+        return prev.to_string();
+    }
+
+    let body = buffer.trim().to_string();
+    clear_lines(1);
+    print!("{}\n", body);
+
+    format!("{}\n\n{}", prev, body)
+}
+
+pub fn cc_footer(prev: &str) -> String {
+    let buffer = prompt(PromptType::Footer, prev);
+
+    if buffer.trim().is_empty() {
+        clear_lines(2);
+        return prev.to_string();
+    }
+
+    let footer = buffer.trim().to_string();
+    clear_lines(1);
+    print!("{}\n", footer);
+
+    format!("{}\n\n{}", prev, footer)
+}
+
+pub fn cc_confirm() -> bool {
+    println!("\n--------------------");
+    print!("Ready to commit? y/N ");
     io::stdout().flush().unwrap();
 
     let mut buffer = String::new();
     io::stdin().read_line(&mut buffer).unwrap();
+    println!("");
 
-    if buffer.trim().is_empty() {
-        return prev.to_string();
-    }
+    if buffer.trim().to_lowercase().as_str() == "y" {
+        return true;
+    };
 
-    format!("{}\n\n{}", prev, buffer.trim().to_string())
+    false
 }
