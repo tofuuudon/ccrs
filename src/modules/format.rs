@@ -148,5 +148,4 @@ pub fn cc_confirm() {
 
     let mut buffer = String::new();
     io::stdin().read_line(&mut buffer).unwrap();
-    println!("");
 }
