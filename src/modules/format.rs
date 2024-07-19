@@ -6,6 +6,7 @@ enum PromptType {
     Description,
     Body,
     Footer,
+    FooterBreakingChange,
 }
 
 pub enum PromptError {
@@ -33,11 +34,15 @@ fn prompt(r#type: PromptType, prev: &str) -> String {
         }
         PromptType::Body => {
             println!("");
-            print!(">> ");
+            print!("[body] ");
         }
         PromptType::Footer => {
             println!("");
-            print!(">> ");
+            print!("[footer] ");
+        }
+        PromptType::FooterBreakingChange => {
+            println!("");
+            print!("BREAKING CHANGE: ");
         }
     }
     io::stdout().flush().unwrap();
@@ -74,12 +79,12 @@ pub fn cc_scope(prev: &str) -> String {
     format!("{}({})", prev, buffer.trim().to_string())
 }
 
-pub fn cc_breaking_change(prev: &str) -> String {
+pub fn cc_breaking_change(prev: &str) -> (String, bool) {
     let buffer = prompt(PromptType::BreakingChange, prev);
 
     match buffer.trim().to_lowercase().as_str() {
-        "y" => format!("{}!", prev),
-        _ => prev.to_string(),
+        "y" => (format!("{}!", prev), true),
+        _ => (prev.to_string(), false),
     }
 }
 
@@ -108,8 +113,13 @@ pub fn cc_body(prev: &str) -> String {
     format!("{}\n\n{}", prev, body)
 }
 
-pub fn cc_footer(prev: &str) -> String {
-    let buffer = prompt(PromptType::Footer, prev);
+pub fn cc_footer(prev: &str, has_breaking_change: bool) -> String {
+    let prompt_type = if has_breaking_change {
+        PromptType::FooterBreakingChange
+    } else {
+        PromptType::Footer
+    };
+    let buffer = prompt(prompt_type, prev);
 
     if buffer.trim().is_empty() {
         clear_lines(2);
@@ -118,8 +128,13 @@ pub fn cc_footer(prev: &str) -> String {
 
     let footer = buffer.trim().to_string();
     clear_lines(1);
-    print!("{}\n", footer);
 
+    if has_breaking_change {
+        print!("BREAKING CHANGE: {}\n", footer);
+        return format!("{}\n\nBREAKING CHANGE: {}", prev, footer);
+    }
+
+    print!("{}\n", footer);
     format!("{}\n\n{}", prev, footer)
 }
 
