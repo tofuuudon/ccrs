@@ -140,7 +140,7 @@ pub fn cc_footer(prev: &str, has_breaking_change: bool) -> String {
 
 pub fn cc_confirm() {
     println!("\n--------------------");
-    print!("Ready to commit? [Enter] ");
+    print!("Confirm [Enter] ");
     io::stdout().flush().unwrap();
 
     let mut buffer = String::new();
