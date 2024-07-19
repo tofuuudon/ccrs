@@ -32,7 +32,7 @@ fn main() {
     buffer = cc_body(&buffer);
     buffer = cc_footer(&buffer);
 
-    if cc_confirm() {
-        commit(&buffer);
-    }
+    cc_confirm();
+
+    commit(&buffer);
 }

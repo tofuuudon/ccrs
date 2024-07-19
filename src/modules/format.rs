@@ -33,11 +33,11 @@ fn prompt(r#type: PromptType, prev: &str) -> String {
         }
         PromptType::Body => {
             println!("");
-            print!("[body] ");
+            print!(">> ");
         }
         PromptType::Footer => {
             println!("");
-            print!("[footer] ");
+            print!(">> ");
         }
     }
     io::stdout().flush().unwrap();
@@ -123,18 +123,12 @@ pub fn cc_footer(prev: &str) -> String {
     format!("{}\n\n{}", prev, footer)
 }
 
-pub fn cc_confirm() -> bool {
+pub fn cc_confirm() {
     println!("\n--------------------");
-    print!("Ready to commit? y/N ");
+    print!("Ready to commit? [Enter] ");
     io::stdout().flush().unwrap();
 
     let mut buffer = String::new();
     io::stdin().read_line(&mut buffer).unwrap();
     println!("");
-
-    if buffer.trim().to_lowercase().as_str() == "y" {
-        return true;
-    };
-
-    false
 }
