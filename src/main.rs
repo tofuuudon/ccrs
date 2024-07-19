@@ -5,17 +5,16 @@ use modules::{
         cc_body, cc_breaking_change, cc_confirm, cc_description, cc_footer, cc_scope, cc_type,
         PromptError,
     },
-    git::commit,
+    git::{
+        bump, commit, get_bump_type, get_latest_tag, get_version_numbers, get_version_prefix,
+        BumpType,
+    },
 };
 
 mod modules;
 
-fn main() {
-    println!("\n------- ccrs -------\n");
-
-    let command = env::args().nth(1).unwrap();
-
-    let cc_type = cc_type(&command);
+fn run_commit(command: &str) {
+    let cc_type = cc_type(command);
     let mut buffer = String::from(cc_type);
 
     buffer = cc_scope(&buffer);
@@ -37,4 +36,46 @@ fn main() {
 
     cc_confirm();
     commit(&buffer);
+}
+
+fn run_bump() {
+    let tag = get_latest_tag();
+    let (major, minor, patch) = get_version_numbers(&tag);
+
+    let new_version = match get_bump_type(&tag) {
+        BumpType::Major => {
+            println!("Bumping major ...");
+            format!("{}.{}.{}", major + 1, minor, patch)
+        }
+        BumpType::Minor => {
+            println!("Bumping minor ...");
+            format!("{}.{}.{}", major, minor + 1, patch)
+        }
+        BumpType::Patch => {
+            println!("Bumping patch ...");
+            format!("{}.{}.{}", major, minor, patch + 1)
+        }
+        BumpType::None => {
+            println!("[ERROR] No changes, skipping bump\n",);
+            std::process::exit(1);
+        }
+    };
+    let prefix = get_version_prefix(&tag);
+    let new_tag = format!("{}{}", prefix, new_version);
+
+    println!("\n{} -> {}", tag, new_tag);
+
+    cc_confirm();
+    bump(&new_tag);
+}
+
+fn main() {
+    println!("\n------- ccrs -------\n");
+
+    let command = env::args().nth(1).unwrap();
+
+    match command.as_str() {
+        "bump" => run_bump(),
+        _ => run_commit(&command),
+    }
 }
