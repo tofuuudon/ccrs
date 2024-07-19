@@ -19,7 +19,9 @@ fn main() {
     let mut buffer = String::from(cc_type);
 
     buffer = cc_scope(&buffer);
-    buffer = cc_breaking_change(&buffer);
+
+    let (breaking_change, has_breaking_change) = cc_breaking_change(&buffer);
+    buffer = breaking_change;
 
     match cc_description(&buffer) {
         Ok(new_buffer) => buffer = new_buffer,
@@ -30,9 +32,9 @@ fn main() {
     };
 
     buffer = cc_body(&buffer);
-    buffer = cc_footer(&buffer);
 
-    if cc_confirm() {
-        commit(&buffer);
-    }
+    buffer = cc_footer(&buffer, has_breaking_change);
+
+    cc_confirm();
+    commit(&buffer);
 }
