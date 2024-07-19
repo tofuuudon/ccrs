@@ -55,17 +55,20 @@ fn prompt(r#type: PromptType, prev: &str) -> String {
 
 pub fn cc_type(type_arg: &str) -> &str {
     match type_arg {
-        "ft" => "feat",
-        "fx" => "fix",
-        "do" => "docs",
-        "st" => "style",
-        "p" => "perf",
-        "t" => "test",
-        "b" => "build",
+        "feat" | "ft" | "fe" => "feat",
+        "fix" | "fx" | "fi" => "fix",
+        "doc" | "dc" | "do" => "docs",
+        "style" | "stl" | "st" => "style",
+        "perf" | "pf" | "pe" => "perf",
+        "test" | "ts" | "te" => "test",
+        "build" | "bd" | "bu" => "build",
         "ci" => "ci",
-        "ch" => "chore",
-        "rf" => "refactor",
-        _ => "",
+        "chore" | "chr" | "ch" => "chore",
+        "refactor" | "rf" | "re" => "refactor",
+        _ => {
+            println!("[ERROR] Invalid commit type\n");
+            std::process::exit(1);
+        }
     }
 }
 

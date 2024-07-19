@@ -72,7 +72,13 @@ fn run_bump() {
 fn main() {
     println!("\n------- ccrs -------\n");
 
-    let command = env::args().nth(1).unwrap();
+    let command = match env::args().nth(1) {
+        Some(v) => v,
+        None => {
+            println!("[ERROR] Invalid command\n",);
+            std::process::exit(1);
+        }
+    };
 
     match command.as_str() {
         "bump" => run_bump(),
