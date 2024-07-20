@@ -19,7 +19,20 @@ brew install ccrs
 
 Commit
 
-&nbsp;&nbsp;&nbsp;&nbsp;You can specify which type of commit you'd like to create, e.g. `ft`, `fx`, and `rf` — which are `feat`, `fix`, and `refactor`, respectively. There are more types, please refer to the reference below.
+&nbsp;&nbsp;&nbsp;&nbsp;You can specify which type of commit you'd like to create, e.g. `ft`, `fx`, and `rf` — which are `feat`, `fix`, and `refactor`, respectively. There are more types, please refer to the table below.
+
+|    longhand      |   shorthands  |
+|----------|-----|
+| feat     | ft,fe  |
+| fix      | fx,fi  |
+| docs     | dc,do  |
+| style    | stl,st |
+| perf     | pf,pe  |
+| test     | ts,te  |
+| build    | bd,bu  |
+| ci       | ci  |
+| chore    | chr,ch |
+| refactor | rf,re  |
 
 https://github.com/user-attachments/assets/b286979f-4b41-412c-ad14-87ba8926269c
 
