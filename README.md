@@ -19,7 +19,7 @@ brew install ccrs
 
 Commit
 
-&nbsp;&nbsp;&nbsp;&nbsp;You can specify which type of commit you'd like to create, e.g. `ft`, `fx`, and `rf` — which are `feat`, `fix`, and `refactor`, respectively. There are more types, please refer to the table below.
+&nbsp;&nbsp;&nbsp;&nbsp;You can specify which type of commit you'd like to create, e.g. `ft`, `fx`, and `rf` — which are `feat`, `fix`, and `refactor`, respectively. There are more types, please refer to the table below. You can also use the alias `crs` instead of `ccrs`.
 
 |    longhand      |   shorthands  |
 |----------|-----|
@@ -43,4 +43,3 @@ Bump
 &nbsp;&nbsp;&nbsp;&nbsp;You must have an existing initial git tag for `ccrs bump` to work. It takes the existing semantic version, and bumps it by a major if it has a breaking change, a minor for `feat`, and a patch for `fix`. It will reuse any prefixes like `v` from the previous tag.
 
 https://github.com/user-attachments/assets/9843697b-56fa-4178-8abd-07c03a9f87ca
-
