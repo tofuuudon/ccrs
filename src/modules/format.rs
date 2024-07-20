@@ -57,7 +57,7 @@ pub fn cc_type(type_arg: &str) -> &str {
     match type_arg {
         "feat" | "ft" | "fe" => "feat",
         "fix" | "fx" | "fi" => "fix",
-        "doc" | "dc" | "do" => "docs",
+        "docs" | "dc" | "do" => "docs",
         "style" | "stl" | "st" => "style",
         "perf" | "pf" | "pe" => "perf",
         "test" | "ts" | "te" => "test",
