@@ -1,6 +1,7 @@
 use regex::Regex;
 use std::process::Command;
 
+#[derive(PartialEq)]
 pub enum BumpType {
     Major,
     Minor,
@@ -71,18 +72,31 @@ pub fn get_bump_type(tag: &str) -> BumpType {
     let minor_re = Regex::new(r"feat.*:.*").unwrap();
     let patch_re = Regex::new(r"fix.*:.*").unwrap();
 
+    let mut bump_type = BumpType::None;
     for line in commits.lines() {
-        let bump_type = match line {
-            _ if major_re.is_match(line) => BumpType::Major,
-            _ if minor_re.is_match(line) => BumpType::Minor,
-            _ if patch_re.is_match(line) => BumpType::Patch,
+        match line {
+            _ if major_re.is_match(line) => {
+                bump_type = BumpType::Major;
+            }
+            _ if minor_re.is_match(line) => {
+                if bump_type == BumpType::Major {
+                    continue;
+                }
+
+                bump_type = BumpType::Minor;
+            }
+            _ if patch_re.is_match(line) => {
+                if bump_type == BumpType::Major || bump_type == BumpType::Minor {
+                    continue;
+                }
+
+                bump_type = BumpType::Patch;
+            }
             _ => continue,
         };
-
-        return bump_type;
     }
 
-    BumpType::None
+    bump_type
 }
 
 pub fn get_version_prefix(tag: &str) -> String {
