@@ -45,11 +45,11 @@ fn run_bump() {
     let new_version = match get_bump_type(&tag) {
         BumpType::Major => {
             println!("Bumping major ...");
-            format!("{}.{}.{}", major + 1, minor, patch)
+            format!("{}.{}.{}", major + 1, 0, 0)
         }
         BumpType::Minor => {
             println!("Bumping minor ...");
-            format!("{}.{}.{}", major, minor + 1, patch)
+            format!("{}.{}.{}", major, minor + 1, 0)
         }
         BumpType::Patch => {
             println!("Bumping patch ...");
